@@ -1,12 +1,12 @@
 import configparser
 import os
 
-TEST_SERVER_HOST = 'alc01.aa-iot.com'
-BUILD_SERVER_HOST = 'alcpd01.aa-iot.com'
+# TEST_SERVER_HOST = 'alc01.aa-iot.com'
+# BUILD_SERVER_HOST = 'alcpd01.aa-iot.com'
 # BUILD_SERVER_HOST = 'tencentclub.aa-iot.com'
 # TEST_SERVER_HOST = 'tencentclub.aa-iot.com'
-# BUILD_SERVER_HOST = 'meeting.smartcity-top.com'
-# TEST_SERVER_HOST = 'meeting.smartcity-top.com'
+BUILD_SERVER_HOST = 'meeting.smartcity-top.com'
+TEST_SERVER_HOST = 'meeting.smartcity-top.com'
 LOCAL_SERVER_HOST = '127.0.0.1'
 
 # 运行环境设置

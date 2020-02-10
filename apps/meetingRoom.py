@@ -25,6 +25,11 @@ class MeetingRoom(BaseAsync):
         self.companyDb = company_db
         self.companyName = company_name
 
+        self.lastOverSchedule = None
+        self.nowSchedule = None
+        self.nextSchedule = None
+        self.otherSchedule = []
+
         self.lastLastOverScheduleInfo = {}
         self.lastNowScheduleInfo = {}
         self.lastNextScheduleInfo = {}
@@ -89,6 +94,10 @@ class MeetingRoom(BaseAsync):
         nowScheduleInfo = {}
         nextScheduleInfo = {}
         otherScheduleInfo = []
+        self.lastOverSchedule = None
+        self.nowSchedule = None
+        self.nextSchedule = None
+        self.otherSchedule = []
 
         for schedule_object in self.scheduleList:
             now_status = 0
@@ -120,17 +129,21 @@ class MeetingRoom(BaseAsync):
             # 取出排程状态
             if schedule_object.timeout:
                 lastOverScheduleInfo = yield schedule_object.getSelfInfo()
+                self.lastOverSchedule = schedule_object
                 continue
             if not nowScheduleInfo:
                 begin_time = datetime.datetime.strptime(schedule_object.startTime, "%Y-%m-%d %H:%M:%S").replace(second=0, microsecond=0)
                 if begin_time < now_time or (begin_time - now_time).seconds <= self.sinMinute * 60:
                     nowScheduleInfo = yield schedule_object.getSelfInfo()
+                    self.nowSchedule = schedule_object
                     continue
             if not nextScheduleInfo:
                 nextScheduleInfo = yield schedule_object.getSelfInfo()
+                self.nextSchedule = schedule_object
                 continue
             other_schedule_info = yield schedule_object.getSelfInfo()
             otherScheduleInfo.append(other_schedule_info)
+            self.otherSchedule.append(schedule_object)
 
 
         # 筛选排除状态
@@ -163,10 +176,7 @@ class MeetingRoom(BaseAsync):
             topic = '/aaiot/{}/send/controlbus/event/schedule/schedule_info/1'.format(self.guid)
             yield self.myPublish(topic, json_dumps(info), qos=QOS)
             yield logClient.tornadoInfoLog('会议室:({})排除信息变更为:{}'.format(self.name, json_dumps(info)))
-
-
-
-
+        yield self.scheduleTimeStatistics(now_time=now_time)
     # todo:获取排程进行时间
     @gen.coroutine
     def getSelfRemainingTime(self):

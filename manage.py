@@ -2,8 +2,6 @@ import asyncio
 
 import uvloop
 from tornado.platform.asyncio import BaseAsyncIOLoop
-
-from apps.eventService import Event
 from apps.mosquittoClient import MosquittoClient
 from setting.setting import MQTT_SERVICE_HOST, ENVIRONMENT
 

@@ -29,7 +29,7 @@ class MosquittoClient(BMosquittoClient):
             else:
                 db_name = db
             data = {
-                'database': db,
+                'database': 'aura',
                 'fields': ['name'],
                 'eq': {
                     'database_name': db_name
